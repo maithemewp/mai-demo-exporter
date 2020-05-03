@@ -15,9 +15,7 @@ array_map(
 );
 
 function mai_demo_exporter_cache_dir() {
-	$upload_dir = wp_get_upload_dir()['basedir'];
-
-	return $upload_dir . DIRECTORY_SEPARATOR . mai_get_handle() . DIRECTORY_SEPARATOR;
+	return WP_CONTENT_DIR . DIRECTORY_SEPARATOR . mai_get_handle() . DIRECTORY_SEPARATOR;
 }
 
 function mai_demo_exporter_content_types() {
