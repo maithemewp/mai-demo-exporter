@@ -9,7 +9,7 @@
  * Plugin Name: Mai Demo Exporter
  * Plugin URI:  https://wordpress.org/plugins/mai-demo-exporter/
  * Description: The required plugin to power Mai child themes.
- * Version:     0.1.0
+ * Version:     0.1.1
  * Author:      BizBudding Inc
  * Author URI:  https://bizbudding.com/
  * Text Domain: mai-demo-exporter

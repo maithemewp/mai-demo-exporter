@@ -10,50 +10,74 @@ array_map(
 		'content',
 		'widgets',
 		'customizer',
+		'rest-api',
 	]
 );
 
-add_filter( 'template_include', 'mai_demo_exporter', 10, 1 );
+function mai_demo_exporter_cache_dir() {
+	$upload_dir = wp_get_upload_dir()['basedir'];
 
-function mai_demo_exporter( $template ) {
-	if ( isset( $_REQUEST['mai-export'] ) ) {
-		$types = [ 'content', 'widgets', 'customizer' ];
-		$type  = sanitize_text_field( $_REQUEST['mai-export'] );
+	return $upload_dir . DIRECTORY_SEPARATOR . mai_get_handle() . DIRECTORY_SEPARATOR;
+}
 
-		if ( in_array( $type, $types, true ) ) {
-			$template = null;
-			$function = "mai_demo_exporter_{$type}";
+function mai_demo_exporter_content_types() {
+	return [
+		'content'    => 'xml',
+		'widgets'    => 'wie',
+		'customizer' => 'dat',
+	];
+}
 
-			echo $function();
-		}
+add_action( 'init', 'mai_demo_exporter_schedule' );
+/**
+ * Description of expected behavior.
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ */
+function mai_demo_exporter_schedule() {
+	if ( ! wp_next_scheduled( 'mai_demo_exporter_daily_event' ) ) {
+		wp_schedule_event( time(), 'daily', 'mai_demo_exporter_daily_event' );
 	}
 
-	return $template;
-}
+	$cache_dir = mai_demo_exporter_cache_dir();
+	$types     = mai_demo_exporter_content_types();
 
-add_action( 'rest_api_init', 'mai_demo_exporter_list_demos' );
+	foreach ( $types as $content_type => $file_type ) {
+		$file = "$cache_dir/$content_type.$file_type";
 
-function mai_demo_exporter_list_demos() {
-	register_rest_route( 'mai-demo-exporter/v2', '/sites/', [
-		'methods'  => 'GET',
-		'callback' => 'mai_demo_exporter_list_demos_callback',
-	] );
-}
-
-function mai_demo_exporter_list_demos_callback( $request ) {
-	$response = new WP_Error( 'not_multisite', __( 'Not a multisite install' ) );
-	$sites    = get_sites();
-
-	if ( $sites && isset( $request['theme'] ) ) {
-		$response = [];
-		$theme    = sanitize_text_field( $request['theme'] );
-
-		foreach ( $sites as $site ) {
-			if ( mai_has_string( $theme, $site->path ) ) {
-				$response[] = str_replace( [ $theme, '-', '\\', '/' ], '', $site->path );
-			}
+		if ( ! file_exists( $file ) ) {
+			mai_demo_exporter_generate_files();
 		}
 	}
-
-	return new WP_REST_Response( $response );
 }
+
+add_action( 'mai_demo_exporter_daily_event', 'mai_demo_exporter_generate_files' );
+/**
+ * Description of expected behavior.
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ */
+function mai_demo_exporter_generate_files() {
+	include_once ABSPATH . 'wp-admin/includes/file.php';
+	\WP_Filesystem();
+	global $wp_filesystem;
+
+	$cache_dir = mai_demo_exporter_cache_dir();
+	$types     = mai_demo_exporter_content_types();
+
+	if ( ! is_dir( $cache_dir ) ) {
+		wp_mkdir_p( $cache_dir );
+	}
+
+	foreach ( $types as $content_type => $file_type ) {
+		$file = "$cache_dir/$content_type.$file_type";
+		$function = "mai_demo_exporter_{$content_type}";
+
+		$wp_filesystem->put_contents( $file, $function() );
+	}
+}
+
