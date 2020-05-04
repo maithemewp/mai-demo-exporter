@@ -41,7 +41,7 @@ function mai_demo_exporter_content_types() {
 	];
 }
 
-add_action( 'after_setup_theme', 'mai_demo_exporter_schedule' );
+add_action( 'admin_init', 'mai_demo_exporter_schedule' );
 /**
  * Description of expected behavior.
  *
