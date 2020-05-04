@@ -67,7 +67,7 @@ function mai_demo_exporter_schedule() {
 	}
 
 	if ( ! wp_next_scheduled( 'mai_demo_exporter_daily_event' ) ) {
-		wp_schedule_event( time(), 'daily', 'mai_demo_exporter_daily_event' );
+		wp_schedule_event( time(), 'twicedaily', 'mai_demo_exporter_daily_event' );
 	}
 }
 
