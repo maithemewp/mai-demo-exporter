@@ -16,6 +16,15 @@ function mai_demo_exporter_list_demos() {
 	] );
 }
 
+/**
+ * Description of expected behavior.
+ *
+ * @since 1.0.0
+ *
+ * @param $request
+ *
+ * @return WP_REST_Response
+ */
 function mai_demo_exporter_list_demos_callback( $request ) {
 	$response = new WP_Error( 'not_multisite', __( 'Not a multisite install' ) );
 	$sites    = get_sites();
@@ -26,7 +35,7 @@ function mai_demo_exporter_list_demos_callback( $request ) {
 
 		foreach ( $sites as $site ) {
 			if ( mai_has_string( $theme, $site->path ) ) {
-				$response[] = str_replace( [ $theme, '-', '\\', '/' ], '', $site->path );
+				$response[ str_replace( [ $theme, '-', '\\', '/' ], '', $site->path ) ] = $site->id;
 			}
 		}
 	}

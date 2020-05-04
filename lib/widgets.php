@@ -2,6 +2,13 @@
 
 defined( 'ABSPATH' ) || die();
 
+/**
+ * Description of expected behavior.
+ *
+ * @since 1.0.0
+ *
+ * @return false|string
+ */
 function mai_demo_exporter_widgets() {
 	global $wp_registered_widget_controls;
 

@@ -2,6 +2,7 @@
 
 defined( 'ABSPATH' ) || die();
 
+// Load includes.
 array_map(
 	function ( $file ) {
 		require_once __DIR__ . DIRECTORY_SEPARATOR . $file . '.php';
@@ -14,10 +15,24 @@ array_map(
 	]
 );
 
+/**
+ * Description of expected behavior.
+ *
+ * @since 1.0.0
+ *
+ * @return string
+ */
 function mai_demo_exporter_cache_dir() {
-	return WP_CONTENT_DIR . DIRECTORY_SEPARATOR . mai_get_handle() . DIRECTORY_SEPARATOR;
+	return wp_upload_dir()['basedir'] . DIRECTORY_SEPARATOR . mai_get_handle() . DIRECTORY_SEPARATOR;
 }
 
+/**
+ * Description of expected behavior.
+ *
+ * @since 1.0.0
+ *
+ * @return array
+ */
 function mai_demo_exporter_content_types() {
 	return [
 		'content'    => 'xml',
@@ -26,7 +41,7 @@ function mai_demo_exporter_content_types() {
 	];
 }
 
-add_action( 'init', 'mai_demo_exporter_schedule' );
+add_action( 'after_setup_theme', 'mai_demo_exporter_schedule' );
 /**
  * Description of expected behavior.
  *
@@ -35,19 +50,24 @@ add_action( 'init', 'mai_demo_exporter_schedule' );
  * @return void
  */
 function mai_demo_exporter_schedule() {
-	if ( ! wp_next_scheduled( 'mai_demo_exporter_daily_event' ) ) {
-		wp_schedule_event( time(), 'daily', 'mai_demo_exporter_daily_event' );
-	}
-
-	$cache_dir = mai_demo_exporter_cache_dir();
-	$types     = mai_demo_exporter_content_types();
+	$cache_dir   = mai_demo_exporter_cache_dir();
+	$types       = mai_demo_exporter_content_types();
+	$files_exist = true;
 
 	foreach ( $types as $content_type => $file_type ) {
 		$file = "$cache_dir/$content_type.$file_type";
 
 		if ( ! file_exists( $file ) ) {
-			mai_demo_exporter_generate_files();
+			$files_exist = false;
 		}
+	}
+
+	if ( ! $files_exist ) {
+		do_action( 'mai_demo_exporter_daily_event' );
+	}
+
+	if ( ! wp_next_scheduled( 'mai_demo_exporter_daily_event' ) ) {
+		wp_schedule_event( time(), 'daily', 'mai_demo_exporter_daily_event' );
 	}
 }
 
@@ -72,10 +92,9 @@ function mai_demo_exporter_generate_files() {
 	}
 
 	foreach ( $types as $content_type => $file_type ) {
-		$file = "$cache_dir/$content_type.$file_type";
+		$file     = "$cache_dir/$content_type.$file_type";
 		$function = "mai_demo_exporter_{$content_type}";
 
 		$wp_filesystem->put_contents( $file, $function() );
 	}
 }
-

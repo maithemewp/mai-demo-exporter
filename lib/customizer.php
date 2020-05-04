@@ -2,6 +2,13 @@
 
 defined( 'ABSPATH' ) || die();
 
+/**
+ * Description of expected behavior.
+ *
+ * @since 1.0.0
+ *
+ * @return string
+ */
 function mai_demo_exporter_customizer() {
 	require_once ABSPATH . WPINC . '/class-wp-customize-manager.php';
 	$wp_customize = new WP_Customize_Manager( compact( 'changeset_uuid', 'theme', 'messenger_channel', 'settings_previewed', 'autosaved', 'branching' ) );
@@ -45,3 +52,19 @@ function mai_demo_exporter_customizer() {
 
 	return serialize( $data );
 }
+
+if ( ! function_exists( 'genesis_get_color_schemes_for_customizer' ) ) {
+	/**
+	 * Description of expected behavior.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	function genesis_get_color_schemes_for_customizer() {
+		return [];
+	}
+}
+
+// Kirki fix.
+add_filter( 'kirki_section_types', '__return_empty_array' );
