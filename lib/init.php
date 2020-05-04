@@ -63,15 +63,15 @@ function mai_demo_exporter_schedule() {
 	}
 
 	if ( ! $files_exist ) {
-		do_action( 'mai_demo_exporter_daily_event' );
+		do_action( 'mai_demo_exporter_hourly_event' );
 	}
 
-	if ( ! wp_next_scheduled( 'mai_demo_exporter_daily_event' ) ) {
-		wp_schedule_event( time(), 'twicedaily', 'mai_demo_exporter_daily_event' );
+	if ( ! wp_next_scheduled( 'mai_demo_exporter_hourly_event' ) ) {
+		wp_schedule_event( time(), 'hourly', 'mai_demo_exporter_hourly_event' );
 	}
 }
 
-add_action( 'mai_demo_exporter_daily_event', 'mai_demo_exporter_generate_files' );
+add_action( 'mai_demo_exporter_hourly_event', 'mai_demo_exporter_generate_files' );
 /**
  * Description of expected behavior.
  *
