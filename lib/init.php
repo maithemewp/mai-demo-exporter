@@ -36,7 +36,7 @@ function mai_demo_exporter_cache_dir() {
 function mai_demo_exporter_content_types() {
 	return [
 		'content'    => 'xml',
-		'widgets'    => 'wie',
+		'widgets'    => 'json',
 		'customizer' => 'dat',
 	];
 }
