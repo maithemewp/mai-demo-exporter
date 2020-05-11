@@ -2,7 +2,7 @@
 
 defined( 'ABSPATH' ) || die();
 
-add_filter('wpforms_post_type_args', 'mai_demo_exporter_enable_wpforms', 10, 1);
+add_filter( 'wpforms_post_type_args', 'mai_demo_exporter_enable_wpforms', 10, 1 );
 /**
  * Description of expected behavior.
  *
@@ -12,7 +12,7 @@ add_filter('wpforms_post_type_args', 'mai_demo_exporter_enable_wpforms', 10, 1);
  *
  * @return array
  */
-function mai_demo_exporter_enable_wpforms($args) {
+function mai_demo_exporter_enable_wpforms( $args ) {
 	$args['can_export'] = true;
 
 	return $args;
@@ -30,8 +30,12 @@ function mai_demo_exporter_content() {
 		require_once ABSPATH . '/wp-admin/includes/export.php';
 	}
 
+	$args = [
+		'status' => 'publish',
+	];
+
 	ob_start();
-	export_wp();
+	export_wp( $args );
 	header( 'Content-Disposition: inline' );
 
 	return ob_get_clean();
