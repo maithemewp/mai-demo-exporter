@@ -37,6 +37,22 @@ function mai_demo_exporter_content() {
 	ob_start();
 	export_wp( $args );
 	header( 'Content-Disposition: inline' );
+	$source = ob_get_clean();
 
-	return ob_get_clean();
+	$dom = new DOMDocument();
+
+	$dom->preserveWhiteSpace = false; // Switch off in production.
+
+	$dom->loadXML( $source );
+
+	// Remove HTML comments.
+	$xpath = new DOMXPath( $dom );
+
+	foreach ( $xpath->query( '//comment()' ) as $comment ) {
+		$comment->parentNode->removeChild( $comment );
+	}
+
+	$body = $xpath->query( '//body' )->item( 0 );
+
+	return $dom->saveXML( $body );
 }
