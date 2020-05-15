@@ -1,5 +1,6 @@
 <?php
 
+// Prevent direct file access.
 defined( 'ABSPATH' ) || die();
 
 add_filter( 'wpforms_post_type_args', 'mai_demo_exporter_enable_wpforms', 10, 1 );
@@ -41,15 +42,42 @@ function mai_demo_exporter_content() {
 
 	$dom = new DOMDocument();
 
-	$dom->preserveWhiteSpace = false; // Switch off in production.
+	$dom->preserveWhiteSpace = true; // Switch off in production.
 
 	$dom->loadXML( $source );
 
-	// Remove HTML comments.
+	/**
+	 * @var DOMXPath $xpath
+	 */
 	$xpath = new DOMXPath( $dom );
 
+	/**
+	 * Remove HTML comments.
+	 *
+	 * @var DOMElement $comment
+	 */
 	foreach ( $xpath->query( '//comment()' ) as $comment ) {
 		$comment->parentNode->removeChild( $comment );
+	}
+
+	/**
+	 * Limit posts to 9.
+	 *
+	 * @var DOMElement $post_type
+	 */
+	$counter = 1;
+
+	foreach ( $xpath->query( '//wp:post_type' ) as $post_type ) {
+		$item  = $post_type->parentNode;
+		$inner = $post_type->textContent;
+
+		if ( 'post' === $inner ) {
+			if ( 9 < $counter ) {
+				$item->parentNode->removeChild( $item );
+			}
+
+			$counter++;
+		}
 	}
 
 	$body = $xpath->query( '//body' )->item( 0 );

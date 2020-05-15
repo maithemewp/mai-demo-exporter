@@ -24,6 +24,11 @@
  * @copyright 2020 BizBudding
  */
 
+// Prevent direct file access.
 defined( 'ABSPATH' ) || die();
 
-require_once __DIR__ . '/lib/init.php';
+// Load includes.
+require_once __DIR__ . '/lib/' . 'admin.php';
+require_once __DIR__ . '/lib/' . 'content.php';
+require_once __DIR__ . '/lib/' . 'widgets.php';
+require_once __DIR__ . '/lib/' . 'customizer.php';

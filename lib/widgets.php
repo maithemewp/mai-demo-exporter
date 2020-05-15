@@ -1,5 +1,6 @@
 <?php
 
+// Prevent direct file access.
 defined( 'ABSPATH' ) || die();
 
 /**
