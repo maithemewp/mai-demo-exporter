@@ -72,7 +72,7 @@ function mai_demo_exporter_content() {
 		$inner = $post_type->textContent;
 
 		if ( 'post' === $inner ) {
-			if ( 9 < $counter ) {
+			if ( 6 < $counter ) {
 				$item->parentNode->removeChild( $item );
 			}
 
