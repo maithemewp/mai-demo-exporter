@@ -24,11 +24,26 @@
  * @copyright 2020 BizBudding
  */
 
+namespace MaiDemoExporter;
+
 // Prevent direct file access.
 defined( 'ABSPATH' ) || die();
 
-// Load includes.
-require_once __DIR__ . '/lib/' . 'admin.php';
-require_once __DIR__ . '/lib/' . 'content.php';
-require_once __DIR__ . '/lib/' . 'widgets.php';
-require_once __DIR__ . '/lib/' . 'customizer.php';
+add_action( 'init', __NAMESPACE__ . '\\init' );
+/**
+ * Description of expected behavior.
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ */
+function init() {
+	if ( ! is_admin() || is_customize_preview() ) {
+		return;
+	}
+
+	require_once __DIR__ . '/lib/' . 'admin.php';
+	require_once __DIR__ . '/lib/' . 'content.php';
+	require_once __DIR__ . '/lib/' . 'widgets.php';
+	require_once __DIR__ . '/lib/' . 'customizer.php';
+}
