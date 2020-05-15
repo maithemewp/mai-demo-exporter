@@ -16,7 +16,10 @@ function mai_demo_exporter_customizer() {
 
 	$template = get_template();
 	$mods     = get_theme_mods();
-	$data     = [
+
+	unset( $mods['nav_menu_locations'] );
+
+	$data = [
 		'template' => $template,
 		'mods'     => $mods ? $mods : [],
 		'options'  => [],
@@ -44,7 +47,7 @@ function mai_demo_exporter_customizer() {
 	$options = mai_get_options();
 
 	foreach ( $options as $key => $value ) {
-		$data['options'][ mai_get_handle() ][$key] = $value;
+		$data['options'][ mai_get_handle() ][ $key ] = $value;
 	}
 
 	if ( function_exists( 'wp_get_custom_css_post' ) ) {
