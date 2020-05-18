@@ -3,22 +3,6 @@
 // Prevent direct file access.
 defined( 'ABSPATH' ) || die();
 
-add_filter( 'wpforms_post_type_args', 'mai_demo_exporter_enable_wpforms', 10, 1 );
-/**
- * Description of expected behavior.
- *
- * @since 1.0.0
- *
- * @param array $args
- *
- * @return array
- */
-function mai_demo_exporter_enable_wpforms( $args ) {
-	$args['can_export'] = true;
-
-	return $args;
-}
-
 /**
  * Description of expected behavior.
  *

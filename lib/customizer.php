@@ -57,6 +57,9 @@ function mai_demo_exporter_customizer() {
 	return serialize( $data );
 }
 
+// Kirki fix.
+add_filter( 'kirki_section_types', '__return_empty_array' );
+
 if ( ! function_exists( 'genesis_get_color_schemes_for_customizer' ) ) {
 	/**
 	 * Description of expected behavior.
@@ -69,6 +72,3 @@ if ( ! function_exists( 'genesis_get_color_schemes_for_customizer' ) ) {
 		return [];
 	}
 }
-
-// Kirki fix.
-add_filter( 'kirki_section_types', '__return_empty_array' );
