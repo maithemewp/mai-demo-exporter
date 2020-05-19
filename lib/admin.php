@@ -13,7 +13,7 @@ add_action( 'admin_menu', 'mai_demo_exporter_admin_menu', 999 );
  */
 function mai_demo_exporter_admin_menu() {
 	$args = [
-		'parent_slug' => 'mai-engine',
+		'parent_slug' => 'mai-theme',
 		'page_title'  => __( 'Demo Generator', 'mai-engine' ),
 		'menu_title'  => __( 'Demo Generator', 'mai-engine' ),
 		'capability'  => 'manage_options',
