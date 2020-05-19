@@ -83,7 +83,9 @@ function mai_demo_exporter_content() {
 			}
 
 			if ( ! in_array( $post_id, $featured_image_ids, true ) ) {
-				$post->parentNode->removeChild( $post );
+
+				// TODO: Keep images used by blocks.
+				// $post->parentNode->removeChild( $post );
 			}
 		}
 	}
@@ -101,13 +103,28 @@ function mai_demo_exporter_content() {
 		if ( 'post' === $c_data ) {
 			$item = $post_type->parentNode;
 
-			if ( 6 < $counter ) {
+			if ( 9 < $counter ) {
 				$item->parentNode->removeChild( $item );
 			}
 
 			$counter++;
 		}
 	}
+
+	/**
+	 * Remove demo pages.
+	 */
+	$pages_to_remove = [
+		'layouts',
+		'content-sidebar',
+		'sidebar-content',
+		'narrow-content',
+		'standard-content',
+		'wide-content',
+		'privacy-policy',
+		'features',
+		'terms-of-use',
+	];
 
 	$body = $xpath->query( '//body' )->item( 0 );
 
