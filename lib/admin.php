@@ -41,7 +41,7 @@ function mai_demo_exporter_admin_page() {
 			<?php wp_nonce_field( 'mai_demo_export', 'mai_demo_export_nonce' ); ?>
 			<input type="hidden" name="action" value="mai_demo_export">
 			<ul>
-				<?php foreach ( [ 'content', 'widgets', 'customizer' ] as $type ) : ?>
+				<?php foreach ( [ 'content', 'template_parts', 'customizer' ] as $type ) : ?>
 					<li>
 						<label for="<?php echo $type; ?>">
 							<input type="checkbox" id="<?php echo $type; ?>" name="<?php echo $type; ?>" checked>
@@ -80,9 +80,9 @@ function mai_demo_export_do_export() {
 			'file_type' => 'xml',
 			'selected'  => isset( $_REQUEST['content'] ) ? sanitize_key( $_REQUEST['content'] ) : false,
 		],
-		'widgets'    => [
-			'file_type' => 'json',
-			'selected'  => isset( $_REQUEST['widgets'] ) ? sanitize_key( $_REQUEST['widgets'] ) : false,
+		'template_parts'    => [
+			'file_type' => 'xml',
+			'selected'  => isset( $_REQUEST['template_parts'] ) ? sanitize_key( $_REQUEST['template_parts'] ) : false,
 		],
 		'customizer' => [
 			'file_type' => 'dat',

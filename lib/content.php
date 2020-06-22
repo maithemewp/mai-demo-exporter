@@ -100,6 +100,11 @@ function mai_demo_exporter_content() {
 	foreach ( $xpath->query( '//wp:post_type' ) as $post_type ) {
 		$c_data = $post_type->textContent;
 
+		if ( 'wp_template_part' === $c_data ) {
+			$item = $post_type->parentNode;
+			$item->parentNode->removeChild( $item );
+		}
+
 		if ( 'post' === $c_data ) {
 			$item = $post_type->parentNode;
 

@@ -44,7 +44,7 @@ function init() {
 
 	require_once __DIR__ . '/lib/' . 'admin.php';
 	require_once __DIR__ . '/lib/' . 'content.php';
-	require_once __DIR__ . '/lib/' . 'widgets.php';
+	require_once __DIR__ . '/lib/' . 'template-parts.php';
 	require_once __DIR__ . '/lib/' . 'customizer.php';
 }
 
