@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || die();
  *
  * @return string
  */
-function mai_demo_exporter_content() {
+function mai_demo_exporter_template_parts() {
 	if ( ! function_exists( 'export_wp' ) ) {
 		require_once ABSPATH . '/wp-admin/includes/export.php';
 	}
