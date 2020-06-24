@@ -1,7 +1,9 @@
 <?php
 
+namespace MaiDemoExporter;
+
 // Prevent direct file access.
-defined( 'ABSPATH' ) || die();
+\defined( 'ABSPATH' ) || die();
 
 /**
  * Description of expected behavior.
@@ -10,8 +12,8 @@ defined( 'ABSPATH' ) || die();
  *
  * @return string
  */
-function mai_demo_exporter_content() {
-	if ( ! function_exists( 'export_wp' ) ) {
+function export_content() {
+	if ( ! \function_exists( 'export_wp' ) ) {
 		require_once ABSPATH . '/wp-admin/includes/export.php';
 	}
 
@@ -19,26 +21,26 @@ function mai_demo_exporter_content() {
 		'status' => 'publish',
 	];
 
-	ob_start();
-	export_wp( $args );
-	header( 'Content-Disposition: inline' );
-	$source = ob_get_clean();
+	\ob_start();
+	\export_wp( $args );
+	\header( 'Content-Disposition: inline' );
+	$source = \ob_get_clean();
 
-	$dom = new DOMDocument();
+	$dom = new \DOMDocument();
 
 	$dom->preserveWhiteSpace = true; // Switch off in production.
 
 	$dom->loadXML( $source );
 
 	/**
-	 * @var DOMXPath $xpath
+	 * @var \DOMXPath $xpath
 	 */
-	$xpath = new DOMXPath( $dom );
+	$xpath = new \DOMXPath( $dom );
 
 	/**
 	 * Remove HTML comments.
 	 *
-	 * @var DOMElement $comment
+	 * @var \DOMElement $comment
 	 */
 	foreach ( $xpath->query( '//comment()' ) as $comment ) {
 		$comment->parentNode->removeChild( $comment );
@@ -47,7 +49,7 @@ function mai_demo_exporter_content() {
 	/**
 	 * Get all featured image IDs.
 	 *
-	 * @var DOMElement $meta_key
+	 * @var \DOMElement $meta_key
 	 */
 	$featured_image_ids = [];
 
@@ -64,7 +66,7 @@ function mai_demo_exporter_content() {
 	/**
 	 * Get all attachment IDs.
 	 *
-	 * @var DOMElement $post_type
+	 * @var \DOMElement $post_type
 	 */
 	foreach ( $xpath->query( '//wp:post_type' ) as $post_type ) {
 		$c_data = $post_type->textContent;
@@ -74,7 +76,7 @@ function mai_demo_exporter_content() {
 			$post_id = '';
 
 			/**
-			 * @var $child_node DOMElement
+			 * @var $child_node \DOMElement
 			 */
 			foreach ( $post->childNodes as $child_node ) {
 				if ( 'wp:post_id' === $child_node->nodeName ) {
@@ -82,7 +84,7 @@ function mai_demo_exporter_content() {
 				}
 			}
 
-			if ( ! in_array( $post_id, $featured_image_ids, true ) ) {
+			if ( ! \in_array( $post_id, $featured_image_ids, true ) ) {
 
 				// TODO: Keep images used by blocks.
 				// $post->parentNode->removeChild( $post );
@@ -93,17 +95,12 @@ function mai_demo_exporter_content() {
 	/**
 	 * Limit posts to 9.
 	 *
-	 * @var DOMElement $post_type
+	 * @var \DOMElement $post_type
 	 */
 	$counter = 1;
 
 	foreach ( $xpath->query( '//wp:post_type' ) as $post_type ) {
 		$c_data = $post_type->textContent;
-
-		if ( 'wp_template_part' === $c_data ) {
-			$item = $post_type->parentNode;
-			$item->parentNode->removeChild( $item );
-		}
 
 		if ( 'post' === $c_data ) {
 			$item = $post_type->parentNode;
