@@ -48,6 +48,30 @@ function init() {
 	require_once __DIR__ . '/lib/' . 'customizer.php';
 }
 
+add_action( 'admin_bar_menu', __NAMESPACE__ . '\\site_id_in_admin_bar', 40, 1 );
+/**
+ * Show site ID in admin bar.
+ *
+ * @since 1.0.0
+ *
+ * @param \WP_Admin_Bar $wp_admin_bar
+ *
+ * @return void
+ */
+function site_id_in_admin_bar( $wp_admin_bar ) {
+
+	/**
+	 * @var object $title_link
+	 */
+	$title_link = $wp_admin_bar->get_node( 'site-name' );
+
+	if ( is_super_admin() && ! is_network_admin() ) {
+		$title_link->title .= ' - (Site ID: ' . get_current_blog_id() . ')';
+	}
+
+	$wp_admin_bar->add_node( $title_link );
+}
+
 add_filter( 'wpforms_post_type_args', __NAMESPACE__ . '\\enable_wpforms', 10, 1 );
 /**
  * Description of expected behavior.
