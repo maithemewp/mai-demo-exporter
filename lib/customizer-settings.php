@@ -12,7 +12,7 @@ namespace MaiDemoExporter;
  *
  * @return string
  */
-function export_customizer() {
+function export_customizer_settings() {
 	require_once ABSPATH . WPINC . '/class-wp-customize-manager.php';
 	$wp_customize = new \WP_Customize_Manager( \compact( 'changeset_uuid', 'theme', 'messenger_channel', 'settings_previewed', 'autosaved', 'branching' ) );
 

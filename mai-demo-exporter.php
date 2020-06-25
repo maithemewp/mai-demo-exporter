@@ -41,5 +41,6 @@ function init() {
 	require_once __DIR__ . '/lib/' . 'compat.php';
 	require_once __DIR__ . '/lib/' . 'admin.php';
 	require_once __DIR__ . '/lib/' . 'content.php';
-	require_once __DIR__ . '/lib/' . 'customizer.php';
+	require_once __DIR__ . '/lib/' . 'customizer-settings.php';
+	require_once __DIR__ . '/lib/' . 'template-parts.php';
 }
