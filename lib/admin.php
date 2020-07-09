@@ -21,7 +21,7 @@ function get_content_types() {
 		],
 		'template_parts'      => [
 			'title'    => __( 'Template Parts' ),
-			'file'     => 'template-parts.xml',
+			'file'     => 'template-parts.json',
 			'callback' => __NAMESPACE__ . '\\export_template_parts',
 		],
 		'customizer_settings' => [

@@ -13,20 +13,13 @@ namespace MaiDemoExporter;
  * @return string
  */
 function export_template_parts() {
-	if ( ! \function_exists( 'export_wp' ) ) {
-		require_once ABSPATH . '/wp-admin/includes/export.php';
-	}
-
-	$args = [
-		'content' => 'wp_template_part',
-		'status'  => 'publish',
-	];
-
-	\ob_start();
-	\export_wp( $args );
-	\header( 'Content-Disposition: inline' );
-
-	$xml = \ob_get_clean();
-
-	return $xml;
+	return json_encode(
+		get_posts(
+			[
+				'numberposts' => -1,
+				'post_type'   => 'wp_template_part',
+				'post_status' => 'publish',
+			]
+		)
+	);
 }
