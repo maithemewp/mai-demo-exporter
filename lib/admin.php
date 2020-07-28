@@ -53,6 +53,13 @@ function admin_menu() {
 	\add_submenu_page( ...\array_values( $args ) );
 }
 
+/**
+ * Description of expected behavior.
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ */
 function admin_page() {
 	global $title;
 
@@ -168,4 +175,28 @@ function site_id_in_admin_bar( $wp_admin_bar ) {
 	}
 
 	$wp_admin_bar->add_node( (array) $title_link );
+}
+
+\add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\inline_styles' );
+/**
+ * Apply inline styles to all admin pages.
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ */
+function inline_styles() {
+	$css = <<<CSS
+/*
+ * Make sites sub menu scrollable.
+ */
+#wpadminbar .ab-top-menu > .menupop > .ab-sub-wrapper {
+    overflow-y: scroll;
+    max-height: 90vh;
+}
+CSS;
+
+	\wp_register_style( __NAMESPACE__, false );
+	\wp_enqueue_style( __NAMESPACE__ );
+	\wp_add_inline_style( __NAMESPACE__, $css );
 }
