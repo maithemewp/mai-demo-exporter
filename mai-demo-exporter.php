@@ -25,7 +25,7 @@ namespace MaiDemoExporter;
 // Prevent direct file access.
 defined( 'ABSPATH' ) || die();
 
-add_action( 'init', __NAMESPACE__ . '\\init' );
+\add_action( 'init', __NAMESPACE__ . '\\init' );
 /**
  * Description of expected behavior.
  *
