@@ -14,7 +14,7 @@ namespace MaiDemoExporter;
  */
 function export_customizer_settings() {
 	require_once ABSPATH . WPINC . '/class-wp-customize-manager.php';
-	$wp_customize = new \WP_Customize_Manager( \compact( 'changeset_uuid', 'theme', 'messenger_channel', 'settings_previewed', 'autosaved', 'branching' ) );
+	$wp_customize = new \WP_Customize_Manager( [] );
 
 	$template = \get_template();
 	$mods     = \get_theme_mods();
