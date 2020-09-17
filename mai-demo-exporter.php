@@ -38,6 +38,7 @@ function init() {
 		return;
 	}
 
+	require_once __DIR__ . '/lib/' . 'functions.php';
 	require_once __DIR__ . '/lib/' . 'compat.php';
 	require_once __DIR__ . '/lib/' . 'admin.php';
 	require_once __DIR__ . '/lib/' . 'content.php';

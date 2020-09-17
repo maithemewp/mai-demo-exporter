@@ -75,7 +75,7 @@ function admin_page() {
 		</p>
 		<?php foreach ( $content_types as $id => $args ): ?>
 			<form action="<?php echo admin_url( 'admin-post.php' ); ?>" method="post">
-				<?php wp_nonce_field( 'mai_demo_export', 'mai_demo_export_nonce' ); ?>
+				<?php \wp_nonce_field( 'mai_demo_export', 'mai_demo_export_nonce' ); ?>
 				<input type="hidden" name="action" value="mai_demo_export">
 				<input type="hidden" name="content_type" value="<?php echo $id; ?>">
 				<input class="button button-primary button-hero" type="submit" value="Regenerate <?php echo $args['title'] ?>">
@@ -84,6 +84,101 @@ function admin_page() {
 		<?php endforeach; ?>
 	</div>
 	<?php
+
+	/**
+	 * Config generator.
+	*/
+	$config   = [];
+	$options  = \mai_get_options();
+	$defaults = require \mai_get_dir() . 'config/_default.php';
+	$keepers  = []; // Any top level settings that transfer dirctly from options to our config. I didn't see any but thought I would.
+
+	foreach ( $options as $key => $value ) {
+
+		// Fonts.
+		if ( \mai_has_string( '-typography', $key ) && $value ) {
+			if ( isset( $value['font-family'] ) && isset( $value['font-weight'] ) ) {
+				$config['global-styles']['fonts'][ str_replace( '-typography', '', $key ) ] = sprintf( '%s:%s', $value['font-family'], $value['font-weight'] );
+			}
+		}
+
+		// Colors.
+		if ( \mai_has_string( 'color-', $key ) && $value ) {
+			$config['global-styles']['colors'][ str_replace( 'color-', '', $key ) ] = $value;
+		}
+
+		// Sticky Header.
+		if ( ( 'site-header-sticky' === $key ) && $value ) {
+			$config['theme-support']['add'] = 'sticky-header';
+		}
+
+		// Transparent Header.
+		if ( ( 'site-header-transparent' === $key ) && $value ) {
+			$config['theme-support']['add'] = 'transparent-header';
+		}
+
+		// Boxed Container, only if true.
+		if ( ( 'boxed-container' === $key ) && $value ) {
+			$config['theme-support']['add'] = $value;
+		}
+
+		// Page Header.
+		if ( \mai_has_string( 'page-header-', $key ) && $value ) {
+			$config['settings']['page-header'][ str_replace( 'page-header-', '', $key ) ] = $value;
+		}
+
+		// Content Archives.
+		if ( ( 'content-archives' === $key ) && $value ) {
+			$config['settings'][ $key ] = $value;
+		}
+
+		// Single Content.
+		if ( ( 'single-content' === $key ) && $value ) {
+			$config['settings'][ $key ] = $value;
+		}
+
+		// Archive Settings. Must be after Content Archives.
+		if ( ( 'archive-settings' === $key ) && $value ) {
+			$config['settings']['content-archives']['enable'] = $value;
+		}
+
+		// Single Settings. Must be after Single Content.
+		if ( ( 'single-settings' === $key ) && $value ) {
+			$config['settings']['single-content']['enable'] = $value;
+		}
+
+		// Site Layouts.
+		if ( ( 'site-layouts' === $key ) && $value ) {
+			$config['settings'][ $key ] = $value;
+		}
+
+		// After Header Menu Alignment.
+		if ( ( 'after-header-menu-alignment' === $key ) && $value ) {
+			$config['settings'][ $key ] = $value;
+		}
+
+		// Add keepers.
+		if ( in_array( $key, $keepers ) && $value ) {
+			$config[ $key ] = $value;
+		}
+
+	}
+
+	// Unset if page header image is an ID.
+	if ( isset( $config['settings']['page-header']['image'] ) && is_numeric( $config['settings']['page-header']['image'] ) ) {
+		unset( $config['settings']['page-header']['image'] );
+	}
+
+	$config = \maidemoexporter_config_cleanup( $config, $defaults );
+
+	$html  = '';
+	$html .= '<pre style="line-height:1;">';
+	$html .= 'return ['. "\r\n";
+	$html .= \maidemoexporter_get_array_html( $config, '&nbsp;&nbsp;&nbsp;&nbsp;' );
+	$html .= '];';
+	$html .= '</pre>';
+
+	echo $html;
 }
 
 \add_action( 'admin_post_mai_demo_export', __NAMESPACE__ . '\\do_export' );
