@@ -13,6 +13,9 @@ function maidemoexporter_get_array_html( $array, $indent = '' ) {
 		} else {
 			if ( is_numeric( $key ) ) {
 				$html .= "{$indent}'{$values}'," . "\r\n";
+			} elseif ( is_bool( $values ) ) {
+				$string = $values ? 'true' : 'false';
+				$html  .= "{$indent}'{$key}' => {$string}," . "\r\n";
 			} else {
 				$html .= "{$indent}'{$key}' => '{$values}'," . "\r\n";
 			}
@@ -39,7 +42,7 @@ function maidemoexporter_config_cleanup( $array, $defaults ) {
 			}
 		}
 		// Remove if empty, set to remove, or same as default.
-		elseif ( empty( $value ) || ( isset( $defaults[ $key ] ) && ( $value === $defaults[ $key ] ) ) ) {
+		elseif ( ( '' === $value ) || ( isset( $defaults[ $key ] ) && ( $value === $defaults[ $key ] ) ) ) {
 			unset( $array[ $key ] );
 		}
 	}
