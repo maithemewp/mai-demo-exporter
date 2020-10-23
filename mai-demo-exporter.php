@@ -5,7 +5,7 @@
  * Plugin Name: Mai Demo Exporter
  * Plugin URI:  https://wordpress.org/plugins/mai-demo-exporter/
  * Description: The required plugin to power Mai child themes.
- * Version:     0.2.2
+ * Version:     0.3.0
  * Author:      BizBudding Inc
  * Author URI:  https://bizbudding.com/
  * Text Domain: mai-demo-exporter
@@ -27,9 +27,9 @@ defined( 'ABSPATH' ) || die();
 
 \add_action( 'init', __NAMESPACE__ . '\\init' );
 /**
- * Description of expected behavior.
+ * Loads files.
  *
- * @since 1.0.0
+ * @since 0.1.0
  *
  * @return void
  */
@@ -44,4 +44,31 @@ function init() {
 	require_once __DIR__ . '/lib/' . 'content.php';
 	require_once __DIR__ . '/lib/' . 'customizer-settings.php';
 	require_once __DIR__ . '/lib/' . 'template-parts.php';
+}
+
+\add_action( 'rest_api_init', __NAMESPACE__ . '\\raw_template_parts' );
+/**
+ * Adds raw content field to rest api for template parts.
+ *
+ * @since 0.3.0
+ *
+ * @return void
+ */
+function raw_template_parts() {
+	$function = function( $object, $field_name, $request ) {
+		return get_post( $object['id'] )->post_content;
+	};
+
+	register_rest_field(
+		'wp_template_part',
+		'content_raw',
+		[
+			'get_callback' => $function,
+			'schema'       => [
+				'description' => '',
+				'type'        => 'string',
+				'context'     => [ 'view' ],
+			],
+		]
+	);
 }
