@@ -17,7 +17,7 @@ namespace MaiDemoExporter;
  * @return array
  */
 function prevent_template_part_export( $args, $post_type ) {
-	if ( 'wp_template_part' === $post_type ) {
+	if ( 'mai_template_part' === $post_type ) {
 		$args['can_export'] = false;
 	}
 
@@ -36,7 +36,7 @@ function export_template_parts() {
 		get_posts(
 			[
 				'numberposts' => -1,
-				'post_type'   => 'wp_template_part',
+				'post_type'   => 'mai_template_part',
 				'post_status' => 'publish',
 			]
 		)
